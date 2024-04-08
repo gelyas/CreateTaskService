@@ -1,0 +1,6 @@
+@GenerateGuidService_HostAddress = http://localhost:5031
+
+GET {{GenerateGuidService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
