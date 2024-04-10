@@ -6,6 +6,6 @@ namespace GenerateGuidService.Services
     {
         Task<Guid> CreateTask();
         Task UpdateTaskState(Guid Id, string State);
-        Task<ResponseModel<Tasks>> GetTaskById(Guid Id);
+        Task<string> GetTaskById(Guid Id);
     }
 }

@@ -18,7 +18,7 @@ namespace GenerateGuidService.Controllers
         public async Task<IActionResult> CreateTask()
         {
             var numberTask = await _taskService.CreateTask();
-            
+
             if (numberTask == Guid.Empty)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
@@ -33,9 +33,19 @@ namespace GenerateGuidService.Controllers
             return Accepted(@$"{numberTask}", numberTask);
         }
 
-        //public IActionResult GetGuid()
-        //{
-        //    //return View();
-        //}
+        [HttpGet()]
+        public async Task<IActionResult> GetTask(string id)
+        {
+            Guid guidOutput;
+
+            if (!Guid.TryParse(id, out guidOutput))
+                return BadRequest("Передан не GUID");
+
+            var getState = await _taskService.GetTaskById(guidOutput);
+
+            if (getState != null)
+                return Ok(getState);
+            else return NotFound("Нет такой задачи");
+        }
     }
 }

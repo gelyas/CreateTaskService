@@ -18,6 +18,6 @@ public partial class Tasks
     public DateTime? Timestamp { get; set; }
 
     [Column("state")]
-    [StringLength(50)]
+    [StringLength(20)]
     public string State { get; set; }
 }

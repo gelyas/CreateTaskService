@@ -2,6 +2,7 @@
 //using GenerateGuidService.Data;
 using GenerateGuidService.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.IdentityModel.Tokens;
 using System.Net;
 
 namespace GenerateGuidService.Services
@@ -29,9 +30,11 @@ namespace GenerateGuidService.Services
             return newTask.Id;
         }
 
-        public Task<ResponseModel<Tasks>> GetTaskById(Guid Id)
+        public async Task<string> GetTaskById(Guid Id)
         {
-            throw new NotImplementedException();
+            string getTaskState = _context.Tasks.Where(x => x.Id == Id).FirstOrDefault()?.State ;
+            
+            return getTaskState;
         }
 
         public Task UpdateTaskState(Guid _id, string _state)

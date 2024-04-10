@@ -13,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-//builder.Services.AddDbContext<GenerateGuidService.Models.PlanningContext>(options => options.UseSqlServer("Data Source=DESKTOP-C1MT787;Initial Catalog=Planning;Persist Security Info=True;User ID=sa;Password=sql;Encrypt=False"));
+
 builder.Services.AddDbContext<PlanningContext>(options => options.UseSqlServer(connection));
 
 builder.Services.AddScoped<ITaskService, TaskService>();
