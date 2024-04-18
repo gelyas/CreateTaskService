@@ -17,19 +17,24 @@ namespace GenerateGuidService.Controllers
         [HttpPost(Name = "task")]
         public async Task<IActionResult> CreateTask()
         {
-            var numberTask = await _taskService.CreateTask();
+            var numberTask = await _taskService.CreateTaskAsync();
 
             if (numberTask == Guid.Empty)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            await _taskService.UpdateTaskState(numberTask, "running");
+            //TODO вынести в другой поток обновление кода
+            var outer = Task.Run(async () =>      // внешняя задача
+            {
+                await _taskService.UpdateTaskStateAsync(numberTask, "running");
 
-            await Task.Delay(5000);
+                await Task.Delay(5000);
 
-            await _taskService.UpdateTaskState(numberTask, "finished");
+                await _taskService.UpdateTaskStateAsync(numberTask, "finished");
+            });
 
+            //outer.Start();
             return Accepted(@$"{numberTask}", numberTask);
         }
 
@@ -41,7 +46,7 @@ namespace GenerateGuidService.Controllers
             if (!Guid.TryParse(id, out guidOutput))
                 return BadRequest("Передан не GUID");
 
-            var getState = await _taskService.GetTaskById(guidOutput);
+            var getState = await _taskService.GetTaskByIdAsync(guidOutput);
 
             if (getState != null)
                 return Ok(getState);

@@ -4,8 +4,8 @@ namespace GenerateGuidService.Services
 {
     public interface ITaskService
     {
-        Task<Guid> CreateTask();
-        Task UpdateTaskState(Guid Id, string State);
-        Task<string> GetTaskById(Guid Id);
+        Task<Guid> CreateTaskAsync();
+        Task UpdateTaskStateAsync(Guid Id, string State);
+        Task<string> GetTaskByIdAsync(Guid Id);
     }
 }

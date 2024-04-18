@@ -2,6 +2,7 @@
 //using GenerateGuidService.Data;
 using GenerateGuidService.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
 
@@ -14,7 +15,7 @@ namespace GenerateGuidService.Services
         {
             _context = context;
         }
-        public async Task<Guid> CreateTask()
+        public async Task<Guid> CreateTaskAsync()
         {
             var newTask = new Tasks
             {
@@ -30,16 +31,19 @@ namespace GenerateGuidService.Services
             return newTask.Id;
         }
 
-        public async Task<string> GetTaskById(Guid Id)
+        public async Task<string> GetTaskByIdAsync(Guid Id)
         {
-            string getTaskState = _context.Tasks.Where(x => x.Id == Id).FirstOrDefault()?.State ;
-            
-            return getTaskState;
+            var task = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == Id);
+            string getTaskState = task?.State;
+            if (!getTaskState.IsNullOrEmpty())
+                return getTaskState;
+            else
+                return string.Empty;
         }
 
-        public Task UpdateTaskState(Guid _id, string _state)
+        public async Task UpdateTaskStateAsync(Guid _id, string _state)
         {
-            var _task = _context.Tasks.Where(x=>x.Id == _id).FirstOrDefault();
+            var _task = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == _id);
 
             if(_task == null)
             {
@@ -52,7 +56,7 @@ namespace GenerateGuidService.Services
             //await _context.Tasks.AddAsync(_task);
              _context.SaveChanges();
 
-            return Task.CompletedTask;
+            return;
         }
     }
 }
